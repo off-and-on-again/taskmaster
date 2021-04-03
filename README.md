@@ -8,19 +8,19 @@ It allows for flexibility and reminds the user (on the web page) of what they sh
 ## Tasks
 
 **Website:**
-- [ ] Design mockup of website
+- [x] Design mockup of website
 - [ ] Website skeleton built (html & css layout)
 - [ ] Website fullly functional (includes JS interactions)
 
 **Scheduler:**
-- [ ] Interface design mockup
+- [x] Interface design mockup
 - [ ] Dummy interface built (with JS implementation)
 - [ ] Partially working model of interface
 - [ ] Note taking feature implemented
 - [ ] Fully working interface which works with main page of website
 
 **Storage Solution:**
-- [ ] Program outline of how data will be stored
+- [x] Program outline of how data will be stored (sort of)
 - [ ] Implementation of user data storage and recollection
 
 **Devpost Materials:**
@@ -31,6 +31,6 @@ It allows for flexibility and reminds the user (on the web page) of what they sh
 
 ## Status
 
-Nothing started yet...
+Building the website...
 
 
