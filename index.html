@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <title>Taskmaster</title>
+
+<link href="min.css" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet">
+    <style>
+      body {
+        background-color: rgb(222, 222, 253);
+      }
+      h1 {
+        color: rgb(101, 112, 240);
+        font-family: 'Roboto', sans-serif;
+        display: inline;
+      }
+      textarea:focus, input:focus{
+    outline: none;
+}
+
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+
+      #foo {
+        position: fixed;
+      bottom: 0;
+      right: 20px;
+      }
+      #another {
+        position: fixed;
+        top: 20px;
+        left: 40px;
+      }
+      /* Style the form - display items horizontally */
+.form-inline {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+}
+
+/* Add some margins for each label */
+.form-inline label {
+  margin: 5px 10px 5px 0;
+}
+
+/* Style the input fields */
+.form-inline input {
+  vertical-align: middle;
+  margin: 5px 10px 5px 0;
+  padding: 10px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+}
+
+/* Style the submit button */
+.form-inline button {
+  padding: 10px 20px;
+  background-color: dodgerblue;
+  border: 1px solid #ddd;
+  color: white;
+}
+
+.form-inline button:hover {
+  background-color: royalblue;
+}
+
+/* Add responsiveness - display the form controls vertically instead of horizontally on screens that are less than 800px wide */
+@media (max-width: 800px) {
+  .form-inline input {
+    margin: 10px 0;
+  }
+
+  .form-inline {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+    </style>
+
+  
+    <link href="styles.css" rel="stylesheet">
+  </head>
+  <body>
+    <div class="container">
+      <header class="d-flex justify-content-center py-3">
+        <ul class="nav nav-pills">
+          <li class="nav-item"><a href="#" class="nav-link active">Home</a></li>
+          <li class="nav-item"><a href="#" class="nav-link">Schedule</a></li>
+          <li class="nav-item"><a href="#" class="nav-link">Tips</a></li>
+        </ul>
+      </header>
+    </div>
+    
+<div class="px-4 py-5 my-5 text-center">
+  <h1 class="display-5 fw-bold">Hello </h1><h1 class="display-5 fw-bold" contenteditable="true" style="outline:none;">stranger</h1><h1  class="display-5 fw-bold">, what is your name?</h1>
+  <div class="col-lg-6 mx-auto">
+    <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+      <button type="button" class="btn btn-primary btn-lg px-4 me-sm-3" style="border-radius: 25px; color: rgb(227, 99, 91); border: 3px solid rgb(227, 99, 91); background-color: rgb(182, 227, 174);"><b>Create Schedule</b></button>
+    </div>
+  </div>
+</div>
+
+<div id="foo">
+  <img class="d-block mx-auto mb-4" src="icon.png" alt="" width="300" height="80"> 
+</div>
+
+<div id="another">
+  <h1 class="display-5 fw-bold" style="color: red"><script>var current = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}); document.write(current);</script></h1>
+</div>
+
+
+
+
+
+
+    <script src="bundle.js"></script>
+
+      
+  </body>
+</html>
