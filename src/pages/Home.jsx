@@ -70,8 +70,10 @@ export default class Home extends React.Component {
   formatTime = () => {
     if (this.state.time < 60) {
       return `${this.state.time} minutes`;
-    } else {
+    } else if (this.state.time < 1440) {
       return `${Math.floor(this.state.time / 60)} hours and ${this.state.time % 60} minutes`
+    } else {
+      return `${Math.floor(this.state.time / 1440)} days and ${Math.floor((this.state.time % 3600) / 24)} hours`
     }
   }
 
@@ -89,7 +91,7 @@ export default class Home extends React.Component {
               {this.state.currentEvents.length === 0 ? "You have no events going on." : `You have ${this.getEventsString()} right now.`}
             </h4><br />
             <h4 class="fw-bold">
-              {this.state.nextEvent === null ? "You don't have anything coming up." : `You have "${this.state.nextEvent.title}" in ${this.formatTime()} minutes.`}
+              {this.state.nextEvent === null ? "You don't have anything coming up." : `You have ${this.state.nextEvent.title} in ${this.formatTime()}.`}
             </h4>
           </div>
           <div class="col-lg-6 mx-auto">
