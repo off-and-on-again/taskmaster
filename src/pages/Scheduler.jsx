@@ -13,7 +13,8 @@ import EditSavedEvent from "../components/EditSavedEvent.jsx";
 import EditExistingEvent from "../components/EditExistingEvent.jsx";
 import Event from "../components/Event.jsx";
 
-import { addData, deleteData, updateData } from "../scripts/scheduler.js";
+import db from '../Scripts/db';
+
 
 const localizer = momentLocalizer(moment);
 const DndCalendar = withDragAndDrop(Calendar);
@@ -21,6 +22,14 @@ const DndCalendar = withDragAndDrop(Calendar);
 export default class Scheduler extends React.Component {
   constructor(props) {
     super();
+
+    this.handleAddEvent = this.handleAddEvent.bind(this);
+    this.handleDeleteEvent = this.handleDeleteEvent.bind(this);
+    this.editEvent = this.editEvent.bind(this);
+
+    this.handleAddStartedEvent = this.handleAddStartedEvent.bind(this);
+    this.handleDeleteStartedEvent = this.handleDeleteStartedEvent.bind(this);
+    this.editStartedEvent = this.editStartedEvent.bind(this);
 
     this.state = {
       editSavedModal: false,
@@ -34,6 +43,64 @@ export default class Scheduler extends React.Component {
       events: props.events.map(event => this.toCurrentWeek(event)),
       hours: props.hours
     };
+  }
+
+  componentDidMount() {
+    db.table('startedEvents').toArray().then(() => {
+      this.setState({ savedEvents });
+    });
+
+    db.table('events').toArray().then(() => {
+      this.setState({ events });
+    });
+
+  }
+
+  handleAddSavedEvent(id, title, length, hex, notes) {
+
+    const savedEvent = {
+      id, 
+      title,
+      length,
+      hex,
+      notes
+    };
+    db.table('startedEvents').add(savedEvent).then();
+  }
+
+  handleAddEvent(id, title, allDay, start, end, hexColor, notes) {
+    const newEvent = {
+      id,
+      title,
+      allDay,
+      start,
+      end,
+      hexColor,
+      notes,
+    };
+    db.table('events').add(newEvent).then();
+  }
+
+  handleDeleteStartedEvent(id) {
+    db.table('savedEvents').delete(id);
+  }
+
+  handleDeleteEvent(id) {
+
+    db.tables('events').delete(id);
+
+  }
+
+  handleToggledStartedEvent(id, title, length, notes, colours) {
+    db.table('savedEvents')
+    .update(id, { id, title, length, colours, notes });
+  }
+
+  handleToggledEvent(id, title, allDay, start, end, notes, colours) {
+
+    db.table('events')
+    .update(id, { id, title, allDay, start, end, colours, notes });
+
   }
 
   // Helper functions (move these to App)
@@ -128,7 +195,7 @@ export default class Scheduler extends React.Component {
 
     savedEvents.push(newEvent);
 
-    addData(newEvent, 0);
+    this.handleAddSavedEvent(id, "New Event", 1, "#f7f7f7", "");
 
     this.setState({
       savedEvents: savedEvents
@@ -169,7 +236,7 @@ export default class Scheduler extends React.Component {
     let savedEvents = this.state.savedEvents.slice(0);
     savedEvents[this.state.currentSavedIndex] = event;
 
-    updateData(event, 0);
+    this.handleToggledStartedEvent(event.id, event.title, event.length, event.notes, event.hexColor);
 
     this.setState({
       savedEvents: savedEvents,
@@ -181,7 +248,7 @@ export default class Scheduler extends React.Component {
   deleteSavedEvent = () => {
     const events = this.state.events.slice(0);
 
-    deleteData(events[this.state.currentSavedIndex], 0);
+    this.handleDeleteSavedEvent(this.state.currentSavedIndex);
 
     events.splice(this.state.currentSavedIndex, 1);
 
@@ -215,7 +282,7 @@ export default class Scheduler extends React.Component {
     const index = events.findIndex(e => e.id === this.state.currentEvent);
     events[index] = { ...events[index], ...event };
 
-    updateData(event, 1);
+    this.handleToggledEvent(event.id, event.title, event.isAllDay, event.start, event.end, event.notes, event.hexColor);
 
     this.setState({
       events: events,
@@ -229,7 +296,7 @@ export default class Scheduler extends React.Component {
     const events = this.state.events.slice(0);
     events.splice(index, 1);
 
-    deleteData(this.state.events[index], 1);
+    this.handleDeleteEvent(index);
 
     this.setState({
       events: events,
@@ -264,7 +331,7 @@ export default class Scheduler extends React.Component {
     event.start = start;
     event.end = end;
 
-    updateData(event, 1);
+    this.handleToggledEvent(event.id, event.title, event.isAllDay, event.start, event.end, event.notes, event.hexColor);
 
     this.setState({
       events: nextEvents
@@ -280,10 +347,7 @@ export default class Scheduler extends React.Component {
         : existingEvent;
     });
 
-    event.start = start;
-    event.end = end;
-
-    updateData(event, 1);
+    this.handleToggledEvent(event.id, event.title, event.isAllDay, start, end, event.notes, event.hexColor);
 
     this.setState({
       events: nextEvents
@@ -311,8 +375,6 @@ export default class Scheduler extends React.Component {
       notes: draggedEvent.notes
     };
 
-    addData(event, 1);
-
     this.setState({ draggedEvent: null });
     this.newEvent(event);
   }
@@ -336,6 +398,8 @@ export default class Scheduler extends React.Component {
       hexColor: event.hexColor,
       notes: event.notes
     };
+
+    this.handleAddEvent(newId, event.title, event.isAllDay, event.start, event.end, event.hexColor, event.notes);
 
     this.setState({
       events: this.state.events.concat([hour]),
