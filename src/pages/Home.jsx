@@ -26,7 +26,6 @@ export default class Home extends React.Component {
       $("#ok").html("Welcome back, " + their_name + ".");
       $("#schedule").fadeOut(0);
       $("#ask").fadeOut(0);
-      $("#main").append(`<button type="button" class="btn btn-primary btn-lg px-4 me-sm-3" onclick="window.location.href='/scheduler'" style="border-radius: 25px; color: rgb(227, 99, 91); border: 3px solid rgb(227, 99, 91); background-color: rgb(182, 227, 174);"><b>View my schedule</b></button>`);
     } else {
       $("#scheduler").fadeOut(0);
       var faded = false;

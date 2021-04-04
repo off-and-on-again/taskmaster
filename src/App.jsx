@@ -100,7 +100,6 @@ export default class App extends React.Component {
               <li className="nav-item">
                 <NavLink to="/scheduler" className="nav-link" activeClassName="active" onClick={this.loadDatabase}>Schedule</NavLink>
               </li>
-              <li className="nav-item"><a href="#" className="nav-link">Tips</a></li>
             </ul>
           </header>
         </div>
