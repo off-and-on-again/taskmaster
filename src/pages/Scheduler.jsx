@@ -10,6 +10,8 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 
 import "./Scheduler.css";
 import EditSavedEvent from "../components/EditSavedEvent.jsx";
+import EditExistingEvent from "../components/EditExistingEvent.jsx";
+import Event from "../components/Event.jsx";
 
 const localizer = momentLocalizer(moment);
 const DndCalendar = withDragAndDrop(Calendar);
@@ -21,6 +23,9 @@ export default class Scheduler extends React.Component {
     this.state = {
       editSavedModal: false,
       currentSavedEvent: null,
+
+      editExistingModal: false,
+      currentEvent: null,
 
       draggedEvent: null,
       savedEvents: props.savedEvents,
@@ -36,7 +41,8 @@ export default class Scheduler extends React.Component {
     savedEvents.push({
       title: "New event",
       length: 1,
-      hexColor: "#f7f7f7"
+      hexColor: "#f7f7f7",
+      notes: ""
     });
 
     this.setState({
@@ -55,7 +61,6 @@ export default class Scheduler extends React.Component {
 
   getSavedEvent = () => {
     const copy = { ...this.state.savedEvents[this.state.currentSavedEvent] };
-    console.log(copy);
     return copy;
   }
 
@@ -84,6 +89,49 @@ export default class Scheduler extends React.Component {
       editSavedModal: false,
       currentSavedEvent: null
     })
+  }
+
+  // Same stuff that happens for existing events on the
+  // calendar instead
+
+  getExistingEvent = () => {
+    const index = this.state.events.findIndex(event => event.id == this.state.currentEvent);
+    const copy = { ...this.state.events[index] };
+    return copy;
+  }
+
+  changeEvent = (event, willChange) => {
+    if (!willChange) {
+      this.setState({
+        editExistingModal: false,
+        currentEvent: null
+      });
+
+      return;
+    }
+
+    let events = this.state.events.slice(0);
+    const index = events.findIndex(e => e.id === this.state.currentEvent);
+    events[index] = { ...events[index], ...event };
+
+    this.setState({
+      events: events,
+      editExistingModal: false,
+      currentEvent: null
+    });
+  }
+
+  deleteEvent = () => {
+    console.log(this.state.currentEvent);
+    const index = this.state.events.findIndex(event => event.id === this.state.currentEvent);
+    const events = this.state.events.slice(0);
+    events.splice(index, 1);
+
+    this.setState({
+      events: events,
+      editExistingModal: false,
+      currentEvent: null
+    });
   }
 
   // Range slider
@@ -128,6 +176,14 @@ export default class Scheduler extends React.Component {
     });
   };
 
+  onDoubleClickEvent = (event, e) => {
+    console.log(event);
+    this.setState({
+      editExistingModal: true,
+      currentEvent: event.id
+    });
+  }
+
   onDropFromOutside = ({ start, end, allDay }) => {
     const { draggedEvent } = this.state;
     const eventEnd = moment(start).add(draggedEvent.length, "hours");
@@ -137,7 +193,8 @@ export default class Scheduler extends React.Component {
       start,
       end: eventEnd.toDate(),
       isAllDay: allDay,
-      hexColor: draggedEvent.hexColor
+      hexColor: draggedEvent.hexColor,
+      notes: draggedEvent.notes
     };
 
     this.setState({ draggedEvent: null });
@@ -146,14 +203,22 @@ export default class Scheduler extends React.Component {
 
   newEvent = event => {
     let idList = this.state.events.map(a => a.id);
-    let newId = Math.max(...idList) + 1;
+    let newId;
+    
+    if (idList.length === 0) {
+      newId = 0;
+    } else {
+      newId = Math.max(...idList) + 1;
+    }
+
     let hour = {
       id: newId,
       title: event.title,
       allDay: event.isAllDay,
       start: event.start,
       end: event.end,
-      hexColor: event.hexColor
+      hexColor: event.hexColor,
+      notes: event.notes
     };
 
     this.setState({
@@ -213,7 +278,14 @@ export default class Scheduler extends React.Component {
             event={this.getSavedEvent()}
             onClick={this.changeSavedEvent} />
         )}
+        {this.state.editExistingModal && (
+          <EditExistingEvent
+            event={this.getExistingEvent()}
+            onClick={this.changeEvent}
+            onDelete={this.deleteEvent} />
+        )}
         <DndCalendar
+          tooltipAccessor={null}
           id="calendar"
           selectable
           resizable
@@ -227,9 +299,11 @@ export default class Scheduler extends React.Component {
           max={maxTime}
           onEventDrop={this.onEventDrop}
           onEventResize={this.onEventResize}
+          onDoubleClickEvent={this.onDoubleClickEvent}
           onDropFromOutside={this.onDropFromOutside}
           dragFromOutsideItem={this.dragFromOutsideItem}
-          eventPropGetter={this.eventStyleGetter} />
+          eventPropGetter={this.eventStyleGetter}
+          components={{event: Event}} />
       </div>
     );
   }
