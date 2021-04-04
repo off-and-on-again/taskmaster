@@ -7,9 +7,52 @@
     <title>Taskmaster</title>
 
 <link href="min.css" rel="stylesheet">
+<link rel="shortcut icon" type="image/png" href="fav.png"/>
 <link rel="preconnect" href="https://fonts.gstatic.com">
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet">
     <style>
+.smartphone {
+  position: relative;
+  width: 360px;
+  height: 640px;
+  margin: auto;
+  border: 16px black solid;
+  border-top-width: 60px;
+  border-bottom-width: 60px;
+  border-radius: 36px;
+}
+.smartphone:before {
+  content: '';
+  display: block;
+  width: 60px;
+  height: 5px;
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #333;
+  border-radius: 10px;
+}
+
+.smartphone:after {
+  content: '';
+  display: block;
+  width: 35px;
+  height: 35px;
+  position: absolute;
+  left: 50%;
+  bottom: -65px;
+  transform: translate(-50%, -50%);
+  background: #333;
+  border-radius: 50%;
+}
+
+.smartphone .content {
+  width: 360px;
+  height: 640px;
+  background: white;
+}
+
       body {
         background-color: rgb(222, 222, 253);
       }
@@ -38,13 +81,13 @@
 
       #foo {
         position: fixed;
-      bottom: 0;
+      top: 0px;
       right: 20px;
       }
       #another {
         position: fixed;
         top: 20px;
-        left: 40px;
+        left: 20px;
       }
       /* Style the form - display items horizontally */
 .form-inline {
@@ -148,16 +191,15 @@
     <link href="styles.css" rel="stylesheet">
   </head>
   <body>
+    
     <div class="container">
       <header class="d-flex justify-content-center py-3">
         <ul class="nav nav-pills">
           <li class="nav-item"><a href="#" class="nav-link active">Home</a></li>
           <li class="nav-item"><a href="#" class="nav-link" id="scheduler">Scheduler</a></li>
-          <li class="nav-item"><a href="#" class="nav-link" id="tips">Tips</a></li>
         </ul>
       </header>
     </div>
-    
 <div class="px-4 py-5 my-5 text-center" id="main">
   <h1 class="display-5 fw-bold" id="ok">Hello </h1><h1 class="display-5 fw-bold" id="editor" contenteditable="true" style="outline:none;"><u>stranger</u></h1><h1  class="display-5 fw-bold" id="ask">, what is your name?</h1>
   <div class="col-lg-6 mx-auto">
@@ -168,12 +210,13 @@
 </div>
 
 <div id="foo">
-  <img class="d-block mx-auto mb-4" src="icon.png" alt="" width="300" height="80"> 
+  <img class="d-block mx-auto mb-4" src="actual.svg" alt="" width="200" height="200"> 
 </div>
 
 <div id="another">
   <h1 class="display-5 fw-bold" style="color: red"><script>var current = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}); document.write(current);</script></h1>
 </div>
+
 
 
 
@@ -186,33 +229,27 @@
     <script src="bundle.js"></script>
     <script>
       $("#scheduler").click(function() {
-        $("#ok").html("Clicking that button would redirect to the <b>schedule</b> page.")
-        $("#editor").fadeOut(0);
-        $("#ask").fadeOut(0);
+        window.location.href = "/scheduler";
       })
-      $("#tips").click(function() {
-        $("#ok").html("Clicking that button would redirect to the <b>tips</b> page.")
-        $("#editor").fadeOut(0);
-        $("#ask").fadeOut(0);
-      })
-      console.log(localStorage.getItem("on"));
-  if (localStorage.getItem("on") == "true") {
+  if (localStorage.getItem("on") != null) {
     $("#editor").fadeOut(0);
-    $("#ok").html("Welcome back!");
-    $("#main").append('<button type="button" class="btn btn-primary btn-lg px-4 me-sm-3" id="cooko" style="border-radius: 25px; color: rgb(227, 99, 91); border: 3px solid rgb(227, 99, 91); background-color: rgb(182, 227, 174);"><b>Make me a first time user again (for debugging purposes only)</b></button>')
-    $("#cooko").click(function() {
-      localStorage.setItem("on", "false");
-      $("#ok").html("Success. Refresh the page to reach the first time user landing page.")
-    })
+    let their_name = localStorage.getItem("on");
+    $("#ok").html("Welcome back, " + their_name + ".");
+    $("#schedule").fadeOut(0);
     $("#ask").fadeOut(0);
-  } 
-
+    $("#main").append(`<button type="button" class="btn btn-primary btn-lg px-4 me-sm-3" onclick="window.location.href='/scheduler'" style="border-radius: 25px; color: rgb(227, 99, 91); border: 3px solid rgb(227, 99, 91); background-color: rgb(182, 227, 174);"><b>View my schedule</b></button>`);
+  } else {
+      $("#scheduler").fadeOut(0);
       var faded = false;
       $("#schedule").click(function() {
-        localStorage.setItem("on", "true");
-        $("#ok").html("Now, the website would create the schedule. This button also sets the firstTimeUser cookie to false.")
+        let their_name = $("#editor").html();
+        localStorage.setItem("on", their_name.substring(3, their_name.length - 4));
+        their_name = localStorage.getItem("on");
+        $("#ok").html("Thanks, " + their_name + ".")
         $("#editor").fadeOut(0);
         $("#ask").fadeOut(0);
+        $("#schedule").fadeOut(0);
+        $("#main").append(`<button type="button" class="btn btn-primary btn-lg px-4 me-sm-3" onclick="window.location.href='/scheduler'" style="border-radius: 25px; color: rgb(227, 99, 91); border: 3px solid rgb(227, 99, 91); background-color: rgb(182, 227, 174);"><b>Start creating my schedule</b></button>`);
       })
       $("#schedule").fadeOut(0);
     document.getElementById("editor").addEventListener("input", function() {
@@ -226,6 +263,7 @@
       $("#schedule").fadeIn(900, "swing");
     }
   }, false);
+}
 
 
   </script>
