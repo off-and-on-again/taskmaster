@@ -16,7 +16,7 @@ export default class App extends React.Component {
     }
   }
 
-  componentDidMount() {
+  loadDatabase = () => {
     db.table('startedEvents').toArray().then((savedEvents) => {
       this.setState({ savedEvents });
     });
@@ -24,6 +24,10 @@ export default class App extends React.Component {
     db.table('events').toArray().then((events) => {
       this.setState({ events });
     });
+  }
+
+  componentDidMount() {
+    this.loadDatabase();
   }
 
   toCurrentWeek = event => {
@@ -91,10 +95,10 @@ export default class App extends React.Component {
           <header className="d-flex justify-content-center py-3">
             <ul className="nav nav-pills">
               <li className="nav-item">
-                <NavLink exact to="/" className="nav-link" activeClassName="active">Home</NavLink>
+                <NavLink exact to="/" className="nav-link" activeClassName="active" onClick={this.loadDatabase}>Home</NavLink>
               </li>
               <li className="nav-item">
-                <NavLink to="/scheduler" className="nav-link" activeClassName="active">Schedule</NavLink>
+                <NavLink to="/scheduler" className="nav-link" activeClassName="active" onClick={this.loadDatabase}>Schedule</NavLink>
               </li>
               <li className="nav-item"><a href="#" className="nav-link">Tips</a></li>
             </ul>
