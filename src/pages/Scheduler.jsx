@@ -22,7 +22,7 @@ export default class Scheduler extends React.Component {
 
     this.state = {
       editSavedModal: false,
-      currentSavedEvent: null,
+      currentSavedIndex: null,
 
       editExistingModal: false,
       currentEvent: null,
@@ -107,7 +107,17 @@ export default class Scheduler extends React.Component {
 
   addSavedEvent = () => {
     let savedEvents = this.state.savedEvents.slice(0);
+    let idList = savedEvents.map(a => a.id);
+    let newId;
+    
+    if (idList.length === 0) {
+      newId = 0;
+    } else {
+      newId = Math.max(...idList) + 1;
+    }
+
     savedEvents.push({
+      id: newId,
       title: "New event",
       length: 1,
       hexColor: "#f7f7f7",
@@ -129,7 +139,7 @@ export default class Scheduler extends React.Component {
   }
 
   getSavedEvent = () => {
-    const copy = { ...this.state.savedEvents[this.state.currentSavedEvent] };
+    const copy = { ...this.state.savedEvents[this.state.currentSavedIndex] };
     return copy;
   }
 
@@ -151,13 +161,24 @@ export default class Scheduler extends React.Component {
     }
 
     let savedEvents = this.state.savedEvents.slice(0);
-    savedEvents[this.state.currentSavedEvent] = event;
+    savedEvents[this.state.currentSavedIndex] = event;
 
     this.setState({
       savedEvents: savedEvents,
       editSavedModal: false,
       currentSavedEvent: null
     })
+  }
+
+  deleteSavedEvent = () => {
+    const events = this.state.events.slice(0);
+    events.splice(this.state.currentSavedIndex, 1);
+
+    this.setState({
+      events: events,
+      editExistingModal: false,
+      currentEvent: null
+    });
   }
 
   // Same stuff that happens for existing events on the
@@ -347,7 +368,8 @@ export default class Scheduler extends React.Component {
         {this.state.editSavedModal && (
           <EditSavedEvent
             event={this.getSavedEvent()}
-            onClick={this.changeSavedEvent} />
+            onClick={this.changeSavedEvent}
+            onDelete={this.deleteSavedEvent} />
         )}
         {this.state.editExistingModal && (
           <EditExistingEvent

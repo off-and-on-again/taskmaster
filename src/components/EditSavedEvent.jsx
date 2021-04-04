@@ -70,6 +70,7 @@ export default class EditSavedEvent extends React.Component {
         </Modal.Body>
 
         <Modal.Footer>
+          <Button variant="danger" onClick={this.props.onDelete}>Delete</Button>
           <Button variant="primary" onClick={() => this.props.onClick(this.constructEvent(), true)}>Submit</Button>
         </Modal.Footer>
       </Modal>
