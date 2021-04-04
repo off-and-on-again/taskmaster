@@ -39,11 +39,11 @@ export default class Event extends React.Component {
         <Overlay
           rootClose
           target={this.getTarget}
-          show={this.state.showTooltip}
+          show={this.props.event.notes !== "" && this.state.showTooltip}
           placement="top"
           onHide={this.closeTooltip}>
           <Tooltip id="test">
-            {this.props.event.notes !== "" && <div>{this.props.event.notes}</div>}
+            <div>{this.props.event.notes}</div>
           </Tooltip>
         </Overlay>
       </div>
