@@ -95,8 +95,10 @@ window.onload = function() {
         // different data items in the store
         let objectStore = db.transaction('schedule_os').objectStore('schedule_os');
         objectStore.openCursor().onsuccess = function(e) {
+            
             // Get a reference to the cursor
             let cursor = e.target.result;
+            
             // Generate date object and grab the corresponding weekday (0 = Sun, 1 = Mon... 6 = Sat)
             var date = new Date();
             var day = date.getDay();
@@ -106,46 +108,31 @@ window.onload = function() {
 
                 // Check to see if it matches the current date
                 if(cursor.value.day != day) {
+                    // Iterate to the next item in the cursor
                     cursor.continue();
                 }
-                // Create a list item, h3, and p to put each data item inside when displaying it
-                // structure the HTML fragment, and append it inside the list
-                const listItem = document.createElement('li');
-                const h3 = document.createElement('h3');
-                const para = document.createElement('p');
-        
-                listItem.appendChild(h3);
-                listItem.appendChild(para);
-                list.appendChild(listItem);
-        
-                // Put the data from the cursor inside the h3 and para
-                h3.textContent = cursor.value.title;
-                para.textContent = cursor.value.body;
-        
-                // Store the ID of the data item inside an attribute on the listItem, so we know
-                // which item it corresponds to. This will be useful later when we want to delete items
-                listItem.setAttribute('data-note-id', cursor.value.id);
-        
-                // Create a button and place it inside each listItem
-                const deleteBtn = document.createElement('button');
-                listItem.appendChild(deleteBtn);
-                deleteBtn.textContent = 'Delete';
-        
-                // Set an event handler so that when the button is clicked, the deleteItem()
-                // function is run
-                deleteBtn.onclick = deleteItem;
-        
-                // Iterate to the next item in the cursor
-                cursor.continue();
-            } else {
-                // Again, if list item is empty, display a 'No notes stored' message
-                if(!list.firstChild) {
-                const listItem = document.createElement('li');
-                listItem.textContent = 'No notes stored.'
-                list.appendChild(listItem);
+                
+                startTiming = cursor.value.startTime.split(":");
+                startTime = 60 * startTiming[0] + startTiming[1];
+
+                endTiming = cursor.value.endTime.split(":");
+                endTime = 60 * endTiming[0] + endTiming[1];
+
+                now = date.getHours() * 60 + date.getMinutes();
+
+                // Check to see if the current event is occurring right now
+                if(startTime > now || now > endTime) {
+                    
+                    // Iterate to the next item in the cursor
+                    cursor.continue()
                 }
+                
+                // Display Information in relevant text
+
+            } else {
+                // Check if an event has been displayed; If not say the user currently has nothing on
                 // if there are no more cursor items to iterate through, say so
-                console.log('Notes all displayed');
+                console.log('Displayed current event');
             }
         };
       }
