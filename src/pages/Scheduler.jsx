@@ -51,7 +51,7 @@ export default class Scheduler extends React.Component {
   handleAddSavedEvent = (id, title, length, hexColor, notes) => {
 
     const savedEvent = {
-      id, 
+      id,
       title,
       length,
       hexColor,
@@ -78,21 +78,17 @@ export default class Scheduler extends React.Component {
   }
 
   handleDeleteEvent = (id) => {
-
     db.tables('events').delete(id);
-
   }
 
   handleToggledStartedEvent = (id, title, length, hexColor, notes) => {
     db.table('savedEvents')
-    .update(id, { id, title, length, hexColor, notes });
+      .update(id, { id, title, length, hexColor, notes });
   }
 
   handleToggledEvent = (id, title, allDay, start, end, hexColor, notes) => {
-
     db.table('events')
-    .update(id, { id, title, allDay, start, end, hexColor, notes });
-
+      .update(id, { id, title, allDay, start, end, hexColor, notes });
   }
 
   // Helper functions (move these to App)
@@ -139,7 +135,7 @@ export default class Scheduler extends React.Component {
 
     for (let event of this.state.events) {
       const start = moment(event.start);
-      
+
       while (start.isBefore(now)) {
         start.add(1, "week");
       }
@@ -158,7 +154,6 @@ export default class Scheduler extends React.Component {
   // True helper functions within Scheduler
 
   getContrastColour = (hex) => {
-    console.log(hex);
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
     const [r, g, b] = [parseInt(result[1], 16), parseInt(result[2], 16), parseInt(result[3], 16)];
     const brightness = r * 0.299 + g * 0.587 + b * 0.114;
@@ -171,7 +166,7 @@ export default class Scheduler extends React.Component {
     let savedEvents = this.state.savedEvents.slice(0);
     let idList = savedEvents.map(a => a.id);
     let newId;
-    
+
     if (idList.length === 0) {
       newId = 0;
     } else {
@@ -212,7 +207,7 @@ export default class Scheduler extends React.Component {
   editSavedEvent = index => {
     this.setState({
       editSavedModal: true,
-      currentSavedEvent: index
+      currentSavedIndex: index
     });
   }
 
@@ -220,21 +215,22 @@ export default class Scheduler extends React.Component {
     if (!willChange) {
       this.setState({
         editSavedModal: false,
-        currentSavedEvent: null
+        currentSavedIndex: null
       });
 
       return;
     }
 
     let savedEvents = this.state.savedEvents.slice(0);
-    savedEvents[this.state.currentSavedIndex] = event;
+    let newEvent = { ...savedEvents[this.state.currentSavedIndex], ...event };
+    savedEvents[this.state.currentSavedIndex] = newEvent;
 
-    this.handleToggledStartedEvent(event.id, event.title, event.length, event.notes, event.hexColor);
+    this.handleToggledStartedEvent(newEvent.id, newEvent.title, newEvent.length, newEvent.hexColor, newEvent.notes);
 
     this.setState({
       savedEvents: savedEvents,
       editSavedModal: false,
-      currentSavedEvent: null
+      currentSavedIndex: null
     })
   }
 
@@ -273,9 +269,10 @@ export default class Scheduler extends React.Component {
 
     let events = this.state.events.slice(0);
     const index = events.findIndex(e => e.id === this.state.currentEvent);
-    events[index] = { ...events[index], ...event };
+    const newEvent = { ...events[index], ...event };
+    event[index] = newEvent;
 
-    this.handleToggledEvent(event.id, event.title, event.isAllDay, event.start, event.end, event.notes, event.hexColor);
+    this.handleToggledEvent(newEvent.id, newEvent.title, newEvent.isAllDay, newEvent.start, newEvent.end, newEvent.hexColor, newEvent.notes);
 
     this.setState({
       events: events,
@@ -324,7 +321,7 @@ export default class Scheduler extends React.Component {
     event.start = start;
     event.end = end;
 
-    this.handleToggledEvent(event.id, event.title, event.isAllDay, event.start, event.end, event.notes, event.hexColor);
+    this.handleToggledEvent(event.id, event.title, event.isAllDay, event.start, event.end, event.hexColor, event.notes);
 
     this.setState({
       events: nextEvents
@@ -340,7 +337,7 @@ export default class Scheduler extends React.Component {
         : existingEvent;
     });
 
-    this.handleToggledEvent(event.id, event.title, event.isAllDay, start, end, event.notes, event.hexColor);
+    this.handleToggledEvent(event.id, event.title, event.isAllDay, start, end, event.hexColor, event.notes);
 
     this.setState({
       events: nextEvents
@@ -375,7 +372,7 @@ export default class Scheduler extends React.Component {
   newEvent = event => {
     let idList = this.state.events.map(a => a.id);
     let newId;
-    
+
     if (idList.length === 0) {
       newId = 0;
     } else {
@@ -479,7 +476,7 @@ export default class Scheduler extends React.Component {
           onDropFromOutside={this.onDropFromOutside}
           dragFromOutsideItem={this.dragFromOutsideItem}
           eventPropGetter={this.eventStyleGetter}
-          components={{event: Event}} />
+          components={{ event: Event }} />
       </div>
     );
   }
