@@ -13,8 +13,6 @@ export default class Home extends React.Component {
       nextEvent: props.nextEvent[0],
       time: props.nextEvent[1]
     }
-
-    console.log(this.state);
   }
 
   componentDidMount() {
@@ -84,18 +82,20 @@ export default class Home extends React.Component {
       <div>
         <div class="px-4 py-5 my-5 text-center" id="main">
           <h1 class="display-5 fw-bold" id="ok">Hello </h1>
-          <h1 class="display-5 fw-bold" id="editor" contenteditable="true" style={{outline: "none"}}><u>stranger</u></h1>
+          <h1 class="display-5 fw-bold" id="editor" contenteditable="true" style={{ outline: "none" }}><u>stranger</u></h1>
           <h1 class="display-5 fw-bold" id="ask">, what is your name?</h1>
+          {localStorage.getItem("on") !== null && (
+            <div class="col-lg-6 mx-auto">
+              <h4 class="fw-bold">
+                {this.state.currentEvents.length === 0 ? "You have no events going on." : `You have ${this.getEventsString()} right now.`}
+              </h4><br />
+              <h4 class="fw-bold">
+                {this.state.nextEvent === null ? "You don't have anything coming up." : `You have ${this.state.nextEvent.title} in ${this.formatTime()}.`}
+              </h4>
+            </div>
+          )}
           <div class="col-lg-6 mx-auto">
-            <h4 class="fw-bold">
-              {this.state.currentEvents.length === 0 ? "You have no events going on." : `You have ${this.getEventsString()} right now.`}
-            </h4><br />
-            <h4 class="fw-bold">
-              {this.state.nextEvent === null ? "You don't have anything coming up." : `You have ${this.state.nextEvent.title} in ${this.formatTime()}.`}
-            </h4>
-          </div>
-          <div class="col-lg-6 mx-auto">
-            <div class="d-grid gap-2 d-sm-flex justify-content-sm-center" style={{paddingTop: "20px"}}>
+            <div class="d-grid gap-2 d-sm-flex justify-content-sm-center" style={{ paddingTop: "20px" }}>
               <button type="button" class="btn btn-primary btn-lg px-4 me-sm-3" id="schedule" style={{
                 borderRadius: "25px",
                 color: "rgb(227, 99, 91)",
@@ -113,7 +113,7 @@ export default class Home extends React.Component {
         </div>
 
         <div id="another">
-          <h1 class="display-5 fw-bold" style={{color: "red"}}>
+          <h1 class="display-5 fw-bold" style={{ color: "red" }}>
             {current}
           </h1>
         </div>

@@ -32,13 +32,12 @@ export default class Scheduler extends React.Component {
 
       draggedEvent: null,
       savedEvents: props.savedEvents,
-      events: props.events.map(event => this.toCurrentWeek(event)),
+      events: props.events,
       hours: props.hours
     };
   }
 
   handleAddSavedEvent = (id, title, length, hexColor, notes) => {
-
     const savedEvent = {
       id,
       title,
