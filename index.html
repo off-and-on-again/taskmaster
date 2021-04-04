@@ -90,6 +90,58 @@
     align-items: stretch;
   }
 }
+
+.fade-in {
+  animation: fadeIn ease 3s;
+  -webkit-animation: fadeIn ease 3s;
+  -moz-animation: fadeIn ease 3s;
+  -o-animation: fadeIn ease 3s;
+  -ms-animation: fadeIn ease 3s;
+}
+@keyframes fadeIn {
+  0% {
+    opacity:0;
+  }
+  100% {
+    opacity:1;
+  }
+}
+
+@-moz-keyframes fadeIn {
+  0% {
+    opacity:0;
+  }
+  100% {
+    opacity:1;
+  }
+}
+
+@-webkit-keyframes fadeIn {
+  0% {
+    opacity:0;
+  }
+  100% {
+    opacity:1;
+  }
+}
+
+@-o-keyframes fadeIn {
+  0% {
+    opacity:0;
+  }
+  100% {
+    opacity:1;
+  }
+}
+
+@-ms-keyframes fadeIn {
+  0% {
+    opacity:0;
+  }
+  100% {
+    opacity:1;
+}
+}
     </style>
 
   
@@ -100,17 +152,17 @@
       <header class="d-flex justify-content-center py-3">
         <ul class="nav nav-pills">
           <li class="nav-item"><a href="#" class="nav-link active">Home</a></li>
-          <li class="nav-item"><a href="#" class="nav-link">Schedule</a></li>
-          <li class="nav-item"><a href="#" class="nav-link">Tips</a></li>
+          <li class="nav-item"><a href="#" class="nav-link" id="scheduler">Scheduler</a></li>
+          <li class="nav-item"><a href="#" class="nav-link" id="tips">Tips</a></li>
         </ul>
       </header>
     </div>
     
-<div class="px-4 py-5 my-5 text-center">
-  <h1 class="display-5 fw-bold">Hello </h1><h1 class="display-5 fw-bold" contenteditable="true" style="outline:none;">stranger</h1><h1  class="display-5 fw-bold">, what is your name?</h1>
+<div class="px-4 py-5 my-5 text-center" id="main">
+  <h1 class="display-5 fw-bold" id="ok">Hello </h1><h1 class="display-5 fw-bold" id="editor" contenteditable="true" style="outline:none;">stranger</h1><h1  class="display-5 fw-bold" id="ask">, what is your name?</h1>
   <div class="col-lg-6 mx-auto">
-    <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-      <button type="button" class="btn btn-primary btn-lg px-4 me-sm-3" style="border-radius: 25px; color: rgb(227, 99, 91); border: 3px solid rgb(227, 99, 91); background-color: rgb(182, 227, 174);"><b>Create Schedule</b></button>
+    <div class="d-grid gap-2 d-sm-flex justify-content-sm-center" style="padding-top: 20px;">
+      <button type="button" class="btn btn-primary btn-lg px-4 me-sm-3" id="schedule" style="border-radius: 25px; color: rgb(227, 99, 91); border: 3px solid rgb(227, 99, 91); background-color: rgb(182, 227, 174);"><b>Create Schedule</b></button>
     </div>
   </div>
 </div>
@@ -127,8 +179,57 @@
 
 
 
-
+<script
+  src="https://code.jquery.com/jquery-3.6.0.min.js"
+  integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+  crossorigin="anonymous"></script>
     <script src="bundle.js"></script>
+    <script>
+      $("#scheduler").click(function() {
+        $("#ok").html("Clicking that button would redirect to the <b>schedule</b> page.")
+        $("#editor").fadeOut(0);
+        $("#ask").fadeOut(0);
+      })
+      $("#tips").click(function() {
+        $("#ok").html("Clicking that button would redirect to the <b>tips</b> page.")
+        $("#editor").fadeOut(0);
+        $("#ask").fadeOut(0);
+      })
+      console.log(localStorage.getItem("on"));
+  if (localStorage.getItem("on") == "true") {
+    $("#editor").fadeOut(0);
+    $("#ok").html("Welcome back!");
+    $("#main").append('<button type="button" class="btn btn-primary btn-lg px-4 me-sm-3" id="cooko" style="border-radius: 25px; color: rgb(227, 99, 91); border: 3px solid rgb(227, 99, 91); background-color: rgb(182, 227, 174);"><b>Make me a first time user again (for debugging purposes only)</b></button>')
+    $("#cooko").click(function() {
+      localStorage.setItem("on", "false");
+      $("#ok").html("Success. Refresh the page to reach the first time user landing page.")
+    })
+    $("#ask").fadeOut(0);
+  } 
+
+      var faded = false;
+      $("#schedule").click(function() {
+        localStorage.setItem("on", "true");
+        $("#ok").html("Now, the website would create the schedule. This button also sets the firstTimeUser cookie to false.")
+        $("#editor").fadeOut(0);
+        $("#ask").fadeOut(0);
+      })
+      $("#schedule").fadeOut(0);
+    document.getElementById("editor").addEventListener("input", function() {
+      
+      if (!faded) {
+      faded = true;
+      $("#ask").fadeOut(200, "swing", function() {
+        document.getElementById("ask").innerHTML = ", would you like to create a schedule?";
+        $("#ask").fadeIn(200);
+      });
+      $("#schedule").fadeIn(900, "swing");
+    }
+  }, false);
+
+
+  </script>
+  
 
       
   </body>
