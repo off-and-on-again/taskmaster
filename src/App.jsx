@@ -2,7 +2,7 @@ import React from "react";
 import { NavLink, Route, BrowserRouter as Router, Switch } from "react-router-dom";
 import Home from "./pages/Home.jsx";
 import Scheduler from "./pages/Scheduler.jsx";
-import { unpackData } from "../Scripts/scheduler.js";
+import { unpackData } from "./Scripts/scheduler.js";
 
 // Bootstrap
 import "./bundle.js";
