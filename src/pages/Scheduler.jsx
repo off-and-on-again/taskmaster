@@ -29,9 +29,78 @@ export default class Scheduler extends React.Component {
 
       draggedEvent: null,
       savedEvents: props.savedEvents,
-      events: props.events,
+      events: props.events.map(event => this.toCurrentWeek(event)),
       hours: props.hours
     };
+  }
+
+  // Helper functions (move these to App)
+
+  toCurrentWeek = event => {
+    const newEvent = { ...event };
+    const sunday = moment().startOf("week");
+    const start = moment(event.start);
+    const end = moment(event.end);
+
+    while (start.isBefore(sunday)) {
+      start.add(1, "week");
+      end.add(1, "week");
+    }
+
+    newEvent.start = start.toDate();
+    newEvent.end = end.toDate();
+
+    return newEvent;
+  }
+
+  getCurrentEvents = () => {
+    const now = moment();
+    let currentEvents = [];
+
+    for (let event of this.state.events) {
+      const start = moment(event.start);
+      const end = moment(event.end);
+
+      if (now.isBetween(start, end)) {
+        currentEvents.push(event);
+      }
+    }
+
+    return currentEvents;
+  }
+
+  // Returns two things, the information of the event closest to now
+  // and the time until that event in minutes
+  getNextEvent = () => {
+    const now = moment();
+    let closestEvent = null;
+    let closestTime = NaN;
+
+    for (let event of this.state.events) {
+      const start = moment(event.start);
+      
+      while (start.isBefore(now)) {
+        start.add(1, "week");
+      }
+
+      const difference = now.diff(start, "minutes");
+
+      if (closestEvent === null || difference < closestTime) {
+        closestEvent = event;
+        closestTime = difference;
+      }
+    }
+
+    return (closestEvent, closestTime);
+  }
+
+  // True helper functions within Scheduler
+
+  getContrastColour = (hex) => {
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    const [r, g, b] = [parseInt(result[1], 16), parseInt(result[2], 16), parseInt(result[3], 16)];
+    const brightness = r * 0.299 + g * 0.587 + b * 0.114;
+    return brightness > 186 ? "#000000" : "#FFFFFF";
   }
 
   // "Add event" button
@@ -228,7 +297,8 @@ export default class Scheduler extends React.Component {
 
   eventStyleGetter = (event, start, end, isSelected) => {
     var style = {
-      backgroundColor: event.hexColor
+      backgroundColor: event.hexColor,
+      color: this.getContrastColour(event.hexColor)
     };
 
     return {
@@ -256,7 +326,8 @@ export default class Scheduler extends React.Component {
                 onDragStart={() => this.handleDragStart(event)}
                 onDoubleClick={() => this.editSavedEvent(index)}
                 style={{
-                  backgroundColor: event.hexColor
+                  backgroundColor: event.hexColor,
+                  color: this.getContrastColour(event.hexColor)
                 }}>
                 {event.title}
               </div>
