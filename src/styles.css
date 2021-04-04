@@ -20,8 +20,7 @@ h1 {
   display: inline;
 }
 
-textarea:focus,
-input:focus {
+textarea:focus, input:focus {
   outline: none;
 }
 
@@ -52,6 +51,7 @@ input:focus {
 }
 
 /* Style the form - display items horizontally */
+
 .form-inline {
   display: flex;
   flex-flow: row wrap;
@@ -59,11 +59,13 @@ input:focus {
 }
 
 /* Add some margins for each label */
+
 .form-inline label {
   margin: 5px 10px 5px 0;
 }
 
 /* Style the input fields */
+
 .form-inline input {
   vertical-align: middle;
   margin: 5px 10px 5px 0;
@@ -73,6 +75,7 @@ input:focus {
 }
 
 /* Style the submit button */
+
 .form-inline button {
   padding: 10px 20px;
   background-color: dodgerblue;
@@ -85,13 +88,66 @@ input:focus {
 }
 
 /* Add responsiveness - display the form controls vertically instead of horizontally on screens that are less than 800px wide */
+
 @media (max-width: 800px) {
   .form-inline input {
     margin: 10px 0;
   }
-
   .form-inline {
     flex-direction: column;
     align-items: stretch;
+  }
+}
+
+.fade-in {
+  animation: fadeIn ease 3s;
+  -webkit-animation: fadeIn ease 3s;
+  -moz-animation: fadeIn ease 3s;
+  -o-animation: fadeIn ease 3s;
+  -ms-animation: fadeIn ease 3s;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@-moz-keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@-webkit-keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@-o-keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@-ms-keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
   }
 }
