@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, Route, BrowserRouter as Router, Switch } from "react-router-dom";
+import { NavLink, Route, BrowserRouter as Router, Switch } from "react-router-dom";
 import Home from "./pages/Home.jsx";
 import Scheduler from "./pages/Scheduler.jsx";
 
@@ -14,10 +14,10 @@ export default class App extends React.Component {
           <header className="d-flex justify-content-center py-3">
             <ul className="nav nav-pills">
               <li className="nav-item">
-                <Link to="/" className="nav-link active">Home</Link>
+                <NavLink exact to="/" className="nav-link" activeClassName="active">Home</NavLink>
               </li>
               <li className="nav-item">
-                <Link to="/scheduler" className="nav-link">Schedule</Link>
+                <NavLink to="/scheduler" className="nav-link" activeClassName="active">Schedule</NavLink>
               </li>
               <li className="nav-item"><a href="#" className="nav-link">Tips</a></li>
             </ul>
