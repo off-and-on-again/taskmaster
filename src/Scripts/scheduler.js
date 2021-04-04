@@ -8,22 +8,7 @@ export function unpackData(key) {
         console.log("Database failed to open");
     };
 
-<<<<<<< HEAD
     request.onupgradeneeded = function(e) {
-=======
-    request.onsuccess = function () {
-        console.log('Database opened succesfully');
-    }
-    // Store the opened database object in the db variable. This is used a lot below
-    return request.result;
-}
-
-export function unpackData(key) {
-
-    db = grabDatabase();
-
-    request.onupgradeneeded = function (e) {
->>>>>>> 9e4db3f71929e18aa46e38b1521b77cf74b335dc
 
         // Grab a reference to the opened database
         let db = e.target.result;
@@ -55,7 +40,6 @@ export function unpackData(key) {
         console.log('Database setup complete');
     };
 
-<<<<<<< HEAD
     request.onsuccess = function(key) {
         console.log('Database opened succesfully');
         db = request.result;
@@ -90,35 +74,6 @@ export function unpackData(key) {
             };
         }
     };
-=======
-    if (key == 0) {
-
-        let objectStore = db.transaction('savedEvents_os').objectStore('savedEvents_os');
-        let savedEvents = [];
-        objectStore.openCursor().onsucess = function (e) {
-            let cursor = e.target.result;
-            if (cursor) {
-                savedEvents.push(cursor.value);
-                cursor.continue();
-            } else {
-                return savedEvents;
-            }
-        };
-    } else {
-
-        let objectStore = db.transaction('events_os').objectStore('events_os');
-        let events = [];
-        objectStore.openCursor().onsucess = function (e) {
-            let cursor = e.target.result;
-            if (cursor) {
-                events.push(cursor.value);
-                cursor.continue();
-            } else {
-                return events;
-            }
-        };
-    }
->>>>>>> 9e4db3f71929e18aa46e38b1521b77cf74b335dc
 }
 
 
@@ -199,13 +154,8 @@ export function deleteData(event, key) {
         let objectStore = db.objectStore('events_os');
     }
 
-<<<<<<< HEAD
     objectStore.delete(event.id);
     transaction.oncomplete = function() {
-=======
-    let request = objectStore.delete(event.id);
-    transaction.oncomplete = function () {
->>>>>>> 9e4db3f71929e18aa46e38b1521b77cf74b335dc
         console.log('Note ' + noteId + ' deleted.');
     };
 
