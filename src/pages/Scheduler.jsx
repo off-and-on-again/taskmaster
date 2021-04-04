@@ -23,14 +23,6 @@ export default class Scheduler extends React.Component {
   constructor(props) {
     super();
 
-    this.handleAddEvent = this.handleAddEvent.bind(this);
-    this.handleDeleteEvent = this.handleDeleteEvent.bind(this);
-    this.editEvent = this.editEvent.bind(this);
-
-    this.handleAddStartedEvent = this.handleAddStartedEvent.bind(this);
-    this.handleDeleteStartedEvent = this.handleDeleteStartedEvent.bind(this);
-    this.editStartedEvent = this.editStartedEvent.bind(this);
-
     this.state = {
       editSavedModal: false,
       currentSavedIndex: null,
@@ -46,29 +38,29 @@ export default class Scheduler extends React.Component {
   }
 
   componentDidMount() {
-    db.table('startedEvents').toArray().then(() => {
+    db.table('startedEvents').toArray().then((savedEvents) => {
       this.setState({ savedEvents });
     });
 
-    db.table('events').toArray().then(() => {
+    db.table('events').toArray().then((events) => {
       this.setState({ events });
     });
 
   }
 
-  handleAddSavedEvent(id, title, length, hex, notes) {
+  handleAddSavedEvent = (id, title, length, hexColor, notes) => {
 
     const savedEvent = {
       id, 
       title,
       length,
-      hex,
+      hexColor,
       notes
     };
     db.table('startedEvents').add(savedEvent).then();
   }
 
-  handleAddEvent(id, title, allDay, start, end, hexColor, notes) {
+  handleAddEvent = (id, title, allDay, start, end, hexColor, notes) => {
     const newEvent = {
       id,
       title,
@@ -81,25 +73,25 @@ export default class Scheduler extends React.Component {
     db.table('events').add(newEvent).then();
   }
 
-  handleDeleteStartedEvent(id) {
+  handleDeleteStartedEvent = (id) => {
     db.table('savedEvents').delete(id);
   }
 
-  handleDeleteEvent(id) {
+  handleDeleteEvent = (id) => {
 
     db.tables('events').delete(id);
 
   }
 
-  handleToggledStartedEvent(id, title, length, notes, colours) {
+  handleToggledStartedEvent = (id, title, length, hexColor, notes) => {
     db.table('savedEvents')
-    .update(id, { id, title, length, colours, notes });
+    .update(id, { id, title, length, hexColor, notes });
   }
 
-  handleToggledEvent(id, title, allDay, start, end, notes, colours) {
+  handleToggledEvent = (id, title, allDay, start, end, hexColor, notes) => {
 
     db.table('events')
-    .update(id, { id, title, allDay, start, end, colours, notes });
+    .update(id, { id, title, allDay, start, end, hexColor, notes });
 
   }
 
@@ -166,6 +158,7 @@ export default class Scheduler extends React.Component {
   // True helper functions within Scheduler
 
   getContrastColour = (hex) => {
+    console.log(hex);
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
     const [r, g, b] = [parseInt(result[1], 16), parseInt(result[2], 16), parseInt(result[3], 16)];
     const brightness = r * 0.299 + g * 0.587 + b * 0.114;
@@ -185,7 +178,7 @@ export default class Scheduler extends React.Component {
       newId = Math.max(...idList) + 1;
     }
 
-    newEvent = {
+    const newEvent = {
       id: newId,
       title: "New event",
       length: 1,
@@ -195,7 +188,7 @@ export default class Scheduler extends React.Component {
 
     savedEvents.push(newEvent);
 
-    this.handleAddSavedEvent(id, "New Event", 1, "#f7f7f7", "");
+    this.handleAddSavedEvent(newId, "New Event", 1, "#f7f7f7", "");
 
     this.setState({
       savedEvents: savedEvents

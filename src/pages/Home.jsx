@@ -54,7 +54,7 @@ export default class Home extends React.Component {
       <div>
         <div className="px-4 py-5 my-5 text-center">
           <h1 className="display-5 fw-bold">Hello </h1>
-          <h1 className="display-5 fw-bold" contentEditable="true" style={{"outline": "none"}}>stranger</h1>
+          <h1 class="display-5 fw-bold" id="editor" contenteditable="true" style={{outline: "none"}}>stranger</h1>
           <h1 className="display-5 fw-bold">, what is your name?</h1>
           <div className="col-lg-6 mx-auto">
             <div className="d-grid gap-2 d-sm-flex justify-content-sm-center">
