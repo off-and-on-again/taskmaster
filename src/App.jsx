@@ -4,6 +4,8 @@ import Home from "./pages/Home.jsx";
 import Scheduler from "./pages/Scheduler.jsx";
 import moment from "moment";
 
+import db from "./Scripts/db.js";
+
 export default class App extends React.Component {
   constructor(props) {
     super();
@@ -12,6 +14,16 @@ export default class App extends React.Component {
       savedEvents: [],
       events: []
     }
+  }
+
+  componentDidMount() {
+    db.table('startedEvents').toArray().then((savedEvents) => {
+      this.setState({ savedEvents });
+    });
+
+    db.table('events').toArray().then((events) => {
+      this.setState({ events });
+    });
   }
 
   toCurrentWeek = event => {
@@ -61,7 +73,7 @@ export default class App extends React.Component {
         start.add(1, "week");
       }
 
-      const difference = now.diff(start, "minutes");
+      const difference = start.diff(now, "minutes");
 
       if (closestEvent === null || difference < closestTime) {
         closestEvent = event;
@@ -69,7 +81,7 @@ export default class App extends React.Component {
       }
     }
 
-    return (closestEvent, closestTime);
+    return [closestEvent, closestTime];
   }
 
   render() {
@@ -93,7 +105,7 @@ export default class App extends React.Component {
           <Route exact path="/">
             <Home
               currentEvents={this.getCurrentEvents()}
-              nextEvent={this.getNextEvent} />
+              nextEvent={this.getNextEvent()} />
           </Route>
           <Route path="/scheduler">
             <Scheduler

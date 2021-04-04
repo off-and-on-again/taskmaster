@@ -2,9 +2,21 @@ import React from "react";
 import $ from "jquery";
 
 import "../Scripts/bundle.js";
-import db from '../Scripts/db';
 
 export default class Home extends React.Component {
+  constructor(props) {
+    console.log(props.nextEvent);
+    super();
+
+    this.state = {
+      currentEvents: props.currentEvents,
+      nextEvent: props.nextEvent[0],
+      time: props.nextEvent[1]
+    }
+
+    console.log(this.state);
+  }
+
   componentDidMount() {
     $("#scheduler").click(function () {
       window.location.href = "/scheduler";
@@ -45,6 +57,24 @@ export default class Home extends React.Component {
     }
   }
 
+  getEventsString = () => {
+    const titles = this.state.currentEvents.map(event => event.title);
+
+    if (titles.length === 1) {
+      return titles[0];
+    } else {
+      return `${titles.slice(0, -1).join(", ")} and ${titles[-1]}`;
+    }
+  }
+
+  formatTime = () => {
+    if (this.state.time < 60) {
+      return `${this.state.time} minutes`;
+    } else {
+      return `${Math.floor(this.state.time / 60)} hours and ${this.state.time % 60} minutes`
+    }
+  }
+
   render() {
     const current = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
@@ -54,6 +84,14 @@ export default class Home extends React.Component {
           <h1 class="display-5 fw-bold" id="ok">Hello </h1>
           <h1 class="display-5 fw-bold" id="editor" contenteditable="true" style={{outline: "none"}}><u>stranger</u></h1>
           <h1 class="display-5 fw-bold" id="ask">, what is your name?</h1>
+          <div class="col-lg-6 mx-auto">
+            <h4 class="fw-bold">
+              {this.state.currentEvents.length === 0 ? "You have no events going on." : `You have ${this.getEventsString()} right now.`}
+            </h4><br />
+            <h4 class="fw-bold">
+              {this.state.nextEvent === null ? "You don't have anything coming up." : `You have "${this.state.nextEvent.title}" in ${this.formatTime()} minutes.`}
+            </h4>
+          </div>
           <div class="col-lg-6 mx-auto">
             <div class="d-grid gap-2 d-sm-flex justify-content-sm-center" style={{paddingTop: "20px"}}>
               <button type="button" class="btn btn-primary btn-lg px-4 me-sm-3" id="schedule" style={{

@@ -37,17 +37,6 @@ export default class Scheduler extends React.Component {
     };
   }
 
-  componentDidMount() {
-    db.table('startedEvents').toArray().then((savedEvents) => {
-      this.setState({ savedEvents });
-    });
-
-    db.table('events').toArray().then((events) => {
-      this.setState({ events });
-    });
-
-  }
-
   handleAddSavedEvent = (id, title, length, hexColor, notes) => {
 
     const savedEvent = {
