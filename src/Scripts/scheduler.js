@@ -2,23 +2,13 @@
 
 let db;
 
-export function grabDatabase() {
-    let request = window.indexedDB.open("schedule_db", 1);
+export function unpackData(key) {
+
+    let request = indexedDB.open("schedule_db", 2);
 
     request.onerror = function() {
         console.log("Database failed to open");
     };
-
-    request.onsuccess = function() {
-        console.log('Database opened succesfully');
-    }
-    // Store the opened database object in the db variable. This is used a lot below
-    return request.result;
-}
-
-export function unpackData(key) {
-
-    db = grabDatabase();
 
     request.onupgradeneeded = function(e) {
 
@@ -33,7 +23,7 @@ export function unpackData(key) {
         savedEventStore.createIndex('id', 'id', { unique: true });
         savedEventStore.createIndex('name', 'name', { unique: false });
         savedEventStore.createIndex('colour', 'colour', { unique: false });
-        savedEventsStore.createIndex('start', 'start', { unique: false });
+        savedEventStore.createIndex('start', 'start', { unique: false });
         savedEventStore.createIndex('length', 'length', { unique: false });
         savedEventStore.createIndex('notes', 'notes', { unique: false });
 
@@ -52,38 +42,56 @@ export function unpackData(key) {
         console.log('Database setup complete');
     };
 
-    if(key == 0) {
+    request.onsuccess = function(key) {
+        console.log('Database opened succesfully');
+        db = request.result;
 
-        let objectStore = db.transaction('savedEvents_os').objectStore('savedEvents_os');
-        let savedEvents = [];
-        objectStore.openCursor().onsucess = function(e) {
-            let cursor = e.target.result;
-            if(cursor) {
-                savedEvents.push(cursor.value);
-                cursor.continue();
-            } else {
-                return savedEvents;
-            }
-        };
-    } else {
-
-        let objectStore = db.transaction('events_os').objectStore('events_os');
-        let events = [];
-        objectStore.openCursor().onsucess = function(e) {
-            let cursor = e.target.result;
-            if(cursor) {
-                events.push(cursor.value);
-                cursor.continue();
-            } else {
-                return events;
-            }
-        };
-    }
+        if(key == 0) {
+    
+            let objectStore = db.transaction('savedEvents_os').objectStore('savedEvents_os');
+            let savedEvents = [];
+            objectStore.openCursor().onsucess = function(e) {
+                let cursor = e.target.result;
+                if(cursor) {
+                    savedEvents.push(cursor.value);
+                    cursor.continue();
+                } else {
+                    console.log(savedEvents);
+                    return savedEvents
+                }
+            };
+        } else {
+    
+            let objectStore = db.transaction('events_os').objectStore('events_os');
+            let events = [];
+            objectStore.openCursor().onsucess = function(e) {
+                let cursor = e.target.result;
+                if(cursor) {
+                    events.push(cursor.value);
+                    cursor.continue();
+                } else {
+                    console.log(events);
+                    return events
+                }
+            };
+        }
+    };
 }
+
 
 export function addData(event, key) {
 
-    db = grabDatabase();
+    let request = window.indexedDB.open("schedule_db", 1);
+
+    request.onerror = function() {
+        console.log("Database failed to open");
+    };
+
+    request.onsuccess = function() {
+        console.log('Database opened succesfully');
+    }
+
+    db = request.result;
 
     // grab the values entered into the form fields and store them in an object ready for being inserted into the DB
     if(key==0) {
@@ -126,7 +134,17 @@ export function addData(event, key) {
 
 export function deleteData(event, key) {
 
-    db = grabDatabase();
+    let request = window.indexedDB.open("schedule_db", 1);
+
+    request.onerror = function() {
+        console.log("Database failed to open");
+    };
+
+    request.onsuccess = function() {
+        console.log('Database opened succesfully');
+    }
+
+    db = request.result;
 
     // grab the values entered into the form fields and store them in an object ready for being inserted into the DB
     if(key==0) {
@@ -138,7 +156,7 @@ export function deleteData(event, key) {
         let objectStore = db.objectStore('events_os');
     }
 
-    let request = objectStore.delete(event.id);
+    objectStore.delete(event.id);
     transaction.oncomplete = function() {
         console.log('Note ' + noteId + ' deleted.');
     };
@@ -147,7 +165,17 @@ export function deleteData(event, key) {
 
 export function updateData(event, key) {
 
-    db = grabDatabase();
+    let request = window.indexedDB.open("schedule_db", 1);
+
+    request.onerror = function() {
+        console.log("Database failed to open");
+    };
+
+    request.onsuccess = function() {
+        console.log('Database opened succesfully');
+    }
+
+    db = request.result;
 
     if(key==0) {
         let transaction = db.transaction(["savedEvents_os"], 'readwrite');
