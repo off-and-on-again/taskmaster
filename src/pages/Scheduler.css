@@ -1,0 +1,24 @@
+#schedulerHeader {
+    margin: 10px;
+    height: 60px;
+}
+
+#savedEventList {
+    border-radius: 4px;
+    background-color: lightblue;
+    white-space: nowrap;
+    overflow-x: scroll;
+}
+
+.savedEvent {
+    border: 2px solid gray;
+    border-radius: 4px;
+    width: 100px;
+    height: calc(100% - 10px);
+    margin: 5px;
+    display: inline-block;
+}
+
+#calendar {
+    height: 100vh;
+}

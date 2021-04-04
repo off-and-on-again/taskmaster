@@ -30,6 +30,7 @@ export default class App extends React.Component {
           </Route>
           <Route path="/scheduler">
             <Scheduler
+              savedEvents={[]}
               events={[]}
               hours={[8, 20]} />
           </Route>

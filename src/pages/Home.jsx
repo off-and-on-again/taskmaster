@@ -14,10 +14,10 @@ export default class Home extends React.Component {
             <div className="d-grid gap-2 d-sm-flex justify-content-sm-center">
               <button type="button" className="btn btn-primary btn-lg px-4 me-sm-3"
                 style={{
-                  "borderRadius": "25px",
-                  "color": "rgb(227, 99, 91)",
-                  "border": "3px solid rgb(227, 99, 91)",
-                  "backgroundColor": "rgb(182, 227, 174)"
+                  borderRadius: "25px",
+                  color: "rgb(227, 99, 91)",
+                  border: "3px solid rgb(227, 99, 91)",
+                  backgroundColor: "rgb(182, 227, 174)"
                 }}>
                 <b>Create Schedule</b>
               </button>
