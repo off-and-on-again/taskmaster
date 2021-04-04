@@ -13,7 +13,7 @@ import EditSavedEvent from "../components/EditSavedEvent.jsx";
 import EditExistingEvent from "../components/EditExistingEvent.jsx";
 import Event from "../components/Event.jsx";
 
-import { addData, deleteData, updateData } from "../Scripts/scheduler.js";
+import { addData, deleteData, updateData } from "../scripts/scheduler.js";
 
 const localizer = momentLocalizer(moment);
 const DndCalendar = withDragAndDrop(Calendar);
@@ -207,6 +207,7 @@ export default class Scheduler extends React.Component {
         editExistingModal: false,
         currentEvent: null
       });
+
       return;
     }
 
@@ -224,12 +225,11 @@ export default class Scheduler extends React.Component {
   }
 
   deleteEvent = () => {
-    console.log(this.state.currentEvent);
     const index = this.state.events.findIndex(event => event.id === this.state.currentEvent);
     const events = this.state.events.slice(0);
     events.splice(index, 1);
 
-    deleteData(this.state.currentEvent, 1);
+    deleteData(this.state.events[index], 1);
 
     this.setState({
       events: events,
@@ -260,7 +260,7 @@ export default class Scheduler extends React.Component {
 
     const nextEvents = [...events];
     nextEvents.splice(idx, 1, updatedEvent);
-    
+
     event.start = start;
     event.end = end;
 
