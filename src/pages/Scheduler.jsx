@@ -13,6 +13,8 @@ import EditSavedEvent from "../components/EditSavedEvent.jsx";
 import EditExistingEvent from "../components/EditExistingEvent.jsx";
 import Event from "../components/Event.jsx";
 
+import { addData, deleteData, updateData } from "../Scripts/scheduler.js";
+
 const localizer = momentLocalizer(moment);
 const DndCalendar = withDragAndDrop(Calendar);
 
@@ -116,13 +118,17 @@ export default class Scheduler extends React.Component {
       newId = Math.max(...idList) + 1;
     }
 
-    savedEvents.push({
+    newEvent = {
       id: newId,
       title: "New event",
       length: 1,
       hexColor: "#f7f7f7",
       notes: ""
-    });
+    };
+
+    savedEvents.push(newEvent);
+
+    addData(newEvent, 0);
 
     this.setState({
       savedEvents: savedEvents
@@ -163,6 +169,8 @@ export default class Scheduler extends React.Component {
     let savedEvents = this.state.savedEvents.slice(0);
     savedEvents[this.state.currentSavedIndex] = event;
 
+    updateData(event, 0);
+
     this.setState({
       savedEvents: savedEvents,
       editSavedModal: false,
@@ -172,6 +180,9 @@ export default class Scheduler extends React.Component {
 
   deleteSavedEvent = () => {
     const events = this.state.events.slice(0);
+
+    deleteData(events[this.state.currentSavedIndex], 0);
+
     events.splice(this.state.currentSavedIndex, 1);
 
     this.setState({
@@ -196,13 +207,14 @@ export default class Scheduler extends React.Component {
         editExistingModal: false,
         currentEvent: null
       });
-
       return;
     }
 
     let events = this.state.events.slice(0);
     const index = events.findIndex(e => e.id === this.state.currentEvent);
     events[index] = { ...events[index], ...event };
+
+    updateData(event, 1);
 
     this.setState({
       events: events,
@@ -216,6 +228,8 @@ export default class Scheduler extends React.Component {
     const index = this.state.events.findIndex(event => event.id === this.state.currentEvent);
     const events = this.state.events.slice(0);
     events.splice(index, 1);
+
+    deleteData(this.state.currentEvent, 1);
 
     this.setState({
       events: events,
@@ -246,6 +260,11 @@ export default class Scheduler extends React.Component {
 
     const nextEvents = [...events];
     nextEvents.splice(idx, 1, updatedEvent);
+    
+    event.start = start;
+    event.end = end;
+
+    updateData(event, 1);
 
     this.setState({
       events: nextEvents
@@ -260,6 +279,11 @@ export default class Scheduler extends React.Component {
         ? { ...existingEvent, start, end }
         : existingEvent;
     });
+
+    event.start = start;
+    event.end = end;
+
+    updateData(event, 1);
 
     this.setState({
       events: nextEvents
@@ -286,6 +310,8 @@ export default class Scheduler extends React.Component {
       hexColor: draggedEvent.hexColor,
       notes: draggedEvent.notes
     };
+
+    addData(event, 1);
 
     this.setState({ draggedEvent: null });
     this.newEvent(event);

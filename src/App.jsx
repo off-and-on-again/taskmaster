@@ -2,6 +2,7 @@ import React from "react";
 import { NavLink, Route, BrowserRouter as Router, Switch } from "react-router-dom";
 import Home from "./pages/Home.jsx";
 import Scheduler from "./pages/Scheduler.jsx";
+import { unpackData } from "../Scripts/scheduler.js";
 
 // Bootstrap
 import "./bundle.js";
@@ -30,8 +31,8 @@ export default class App extends React.Component {
           </Route>
           <Route path="/scheduler">
             <Scheduler
-              savedEvents={[]}
-              events={[]}
+              savedEvents={unpackData(0)}
+              events={unpackData(1)}
               hours={[8, 20]} />
           </Route>
         </Switch>
