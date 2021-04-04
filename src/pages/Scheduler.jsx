@@ -74,16 +74,17 @@ export default class Scheduler extends React.Component {
   }
 
   handleDeleteStartedEvent = (id) => {
-    db.table('savedEvents').delete(id);
+    db.table('startedEvents').delete(id);
   }
 
   handleDeleteEvent = (id) => {
-    db.tables('events').delete(id);
+    db.table('events').delete(id);
   }
 
   handleToggledStartedEvent = (id, title, length, hexColor, notes) => {
-    db.table('savedEvents')
-      .update(id, { id, title, length, hexColor, notes });
+    console.log(id, title, length, hexColor, notes);
+    db.table('startedEvents')
+    .update(id, { id, title, length, hexColor, notes });
   }
 
   handleToggledEvent = (id, title, allDay, start, end, hexColor, notes) => {
@@ -220,7 +221,7 @@ export default class Scheduler extends React.Component {
 
       return;
     }
-
+    
     let savedEvents = this.state.savedEvents.slice(0);
     let newEvent = { ...savedEvents[this.state.currentSavedIndex], ...event };
     savedEvents[this.state.currentSavedIndex] = newEvent;
@@ -235,16 +236,15 @@ export default class Scheduler extends React.Component {
   }
 
   deleteSavedEvent = () => {
-    const events = this.state.events.slice(0);
+    const savedEvents = this.state.savedEvents.slice(0);
 
-    this.handleDeleteSavedEvent(this.state.currentSavedIndex);
-
-    events.splice(this.state.currentSavedIndex, 1);
+    this.handleDeleteStartedEvent(savedEvents[this.state.currentSavedIndex].id);
+    savedEvents.splice(this.state.currentSavedIndex, 1);
 
     this.setState({
-      events: events,
-      editExistingModal: false,
-      currentEvent: null
+      savedEvents: savedEvents,
+      editSavedModal: false,
+      currentSavedIndex: null
     });
   }
 
@@ -270,7 +270,7 @@ export default class Scheduler extends React.Component {
     let events = this.state.events.slice(0);
     const index = events.findIndex(e => e.id === this.state.currentEvent);
     const newEvent = { ...events[index], ...event };
-    event[index] = newEvent;
+    events[index] = newEvent;
 
     this.handleToggledEvent(newEvent.id, newEvent.title, newEvent.isAllDay, newEvent.start, newEvent.end, newEvent.hexColor, newEvent.notes);
 
@@ -345,7 +345,6 @@ export default class Scheduler extends React.Component {
   };
 
   onDoubleClickEvent = (event, e) => {
-    console.log(event);
     this.setState({
       editExistingModal: true,
       currentEvent: event.id

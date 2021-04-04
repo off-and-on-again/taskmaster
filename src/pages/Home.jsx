@@ -2,6 +2,7 @@ import React from "react";
 import $ from "jquery";
 
 import "../Scripts/bundle.js";
+import db from '../Scripts/db';
 
 export default class Home extends React.Component {
   componentDidMount() {
