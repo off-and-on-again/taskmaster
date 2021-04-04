@@ -1,7 +1,7 @@
 import React from "react";
 import $ from "jquery";
 
-import "../scripts/bundle.js";
+import "../Scripts/bundle.js";
 
 export default class Home extends React.Component {
   componentDidMount() {

@@ -2,15 +2,15 @@ import React from "react";
 import { NavLink, Route, BrowserRouter as Router, Switch } from "react-router-dom";
 import Home from "./pages/Home.jsx";
 import Scheduler from "./pages/Scheduler.jsx";
-import { unpackData } from "./scripts/scheduler.js";
+import moment from "moment";
 
 export default class App extends React.Component {
   constructor(props) {
     super();
 
     this.state = {
-      savedEvents: unpackData(0),
-      events: unpackData(1).map(event => this.toCurrentWeek(event))
+      savedEvents: [],
+      events: []
     }
   }
 
